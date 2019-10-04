@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Microsoft Tech Lab (AKA Universal Surface Bus)</title>
+        <!-- https://developer.microsoft.com/en-us/fabric-js/getstarted/getstarted -->
+        <link rel="stylesheet" href="https://static2.sharepointonline.com/files/fabric/office-ui-fabric-js/1.4.0/css/fabric.min.css" />
+        <link rel="stylesheet" href="https://static2.sharepointonline.com/files/fabric/office-ui-fabric-js/1.4.0/css/fabric.components.min.css" />
+        <script src="https://static2.sharepointonline.com/files/fabric/office-ui-fabric-js/1.4.0/js/fabric.min.js"></script>
+            <!-- https://css-tricks.com/quick-css-trick-how-to-center-an-object-exactly-in-the-center/ -->
+            <style>
+            .centered {
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                /* bring your own prefixes */
+                transform: translate(-50%, -50%);
+            }
+        </style>
+    </head>
+
+    <body class="ms-Fabric centered" style="background-color:#0078d4">
+        <div class="ms-font-su"><font color="white">
+            Hello, {{body}}
+        </div>
+    </body>
+
+</html>
+

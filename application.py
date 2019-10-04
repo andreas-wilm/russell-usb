@@ -61,7 +61,7 @@ connection_string = 'mssql+pymssql://{}:{}@{}:{}/{}'.format(
     #MSSQL_USER,
     MSSQL_PWD, MSSQL_HOST, MSSQL_PORT, MSSQL_DB)
 LOG.info("Connecting using %s", connection_string.replace(MSSQL_PWD, "******"))
-ENGINE = sqlalchemy.create_engine(connection_string)#, echo="debug")
+ENGINE = sqlalchemy.create_engine(connection_string, pool_pre_ping=True)#, echo="debug")
 # make sure to open up access to client ip:
 # https://docs.microsoft.com/en-us/azure/sql-database/sql-database-firewall-configure
 CONNECTION = ENGINE.connect()

@@ -125,13 +125,19 @@ def root():
     #visitorip = request.environ['REMOTE_ADDR']
     #https://www.pythonanywhere.com/forums/topic/2673/
     visitorip = request.environ.get('HTTP_X_FORWARDED_FOR',
-        request.environ['REMOTE_ADDR'])
+                                    request.environ['REMOTE_ADDR'])
 
     now = datetime.now()
     status = "entering"# unless the last entry for this nfcid says "entering" already
-    s = sqlalchemy.select([TAPDB]).where(TAPDB.c.nfcid == nfcid).order_by(
-        TAPDB.c.datetime.desc()).limit(1)
-    row = CONNECTION.execute(s).fetchone()
+    try:
+        s = sqlalchemy.select([TAPDB]).where(TAPDB.c.nfcid == nfcid).order_by(
+            TAPDB.c.datetime.desc()).limit(1)
+        row = CONNECTION.execute(s).fetchone()
+    except:
+        body = "Whoa...couldn't fetch status for {}.".format(nfcid)
+        body += " Error was {}".format(sys.exc_info()[0])
+        return render_template('index.html', user="nobody", body=body)
+
     if row:
         LOG.info("First time I see NFC ID %s", nfcid)
     if row and row["status"] == "entering":
@@ -152,10 +158,15 @@ def root():
         body = "enjoy your stay!"
 
     # insert
-    ins = TAPDB.insert().values(
-        nfcid=nfcid, datetime=now, status=status, ip=visitorip)
-    _ = CONNECTION.execute(ins)
-    LOG.info("DB insert: %s %s %s %s", nfcid, now, status, visitorip)
+    try:
+        ins = TAPDB.insert().values(
+            nfcid=nfcid, datetime=now, status=status, ip=visitorip)
+        _ = CONNECTION.execute(ins)
+        LOG.info("DB insert: %s %s %s %s", nfcid, now, status, visitorip)
+    except:
+        body = "Whoa...couldn't insert status for {}.".format(nfcid)
+        body += " Error was {}".format(sys.exc_info()[0])
+        return render_template('index.html', user="nobody", body=body)
 
     return render_template('index.html', user=nfcid, body=body)
 
